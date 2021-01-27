@@ -24,6 +24,6 @@ class _1Spec extends AnyFlatSpec {
   }
 
   "gcd" should "raise an exception" in {
-    the [IllegalArgumentException] thrownBy gcd(0, 0) should have message "At least one argument should be not zero"
+    the [IllegalArgumentException] thrownBy gcd(0, 0) should have message "At least one argument should be non-zero"
   }
 }
