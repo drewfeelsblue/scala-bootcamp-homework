@@ -18,8 +18,12 @@ class _1Spec extends AnyFlatSpec {
     gcd(17, 5) shouldEqual 1
   }
 
+  "gcd" should "return non-zero argument if another one is zero" in {
+    gcd(0, 5) shouldEqual 5
+    gcd(5, 0) shouldEqual 5
+  }
+
   "gcd" should "raise an exception" in {
-    the [IllegalArgumentException] thrownBy gcd(0, 2) should have message "Zero value as an argument"
-    the [IllegalArgumentException] thrownBy gcd(2, 0) should have message "Zero value as an argument"
+    the [IllegalArgumentException] thrownBy gcd(0, 0) should have message "At least one argument should be not zero"
   }
 }
