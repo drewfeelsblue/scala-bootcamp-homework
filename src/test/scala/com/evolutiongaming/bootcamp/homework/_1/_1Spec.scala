@@ -2,7 +2,7 @@ package com.evolutiongaming.bootcamp.homework._1
 
 import _1._
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.mgit commit -m "first commit"atchers.should.Matchers._
+import org.scalatest.matchers.should.Matchers._
 
 class _1Spec extends AnyFlatSpec {
 
