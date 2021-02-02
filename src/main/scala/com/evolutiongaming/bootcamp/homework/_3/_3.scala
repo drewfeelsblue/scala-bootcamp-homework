@@ -83,27 +83,15 @@ object _3 {
     }
   }
 
-  sealed trait Result {
+  sealed trait Result{
     def result: Double
-    def resultPrefix: String
-    def print: String = s"$resultPrefix is $result"
   }
   object Result {
-    final case class Divide(divide: Command.Divide, result: Double) extends Result {
-      override def resultPrefix: String = s"${divide.dividend} divided by ${divide.divisor}"
-    }
-    final case class Sum(sum: Command.Sum, result: Double) extends Result {
-      override def resultPrefix: String = s"the sum of ${sum.numbers.mkString(" ")}"
-    }
-    final case class Average(average: Command.Average, result: Double) extends Result {
-      override def resultPrefix: String = s"the average of ${average.numbers.mkString(" ")}"
-    }
-    final case class Min(min: Command.Min, result: Double) extends Result {
-      override def resultPrefix: String = s"the minimum of ${min.numbers.mkString(" ")}"
-    }
-    final case class Max(max: Command.Max, result: Double) extends Result {
-      override def resultPrefix: String = s"the maximum of ${max.numbers.mkString(" ")}"
-    }
+    final case class Divide(command: Command.Divide, result: Double) extends Result
+    final case class Sum(sum: Command.Sum, result: Double) extends Result
+    final case class Average(average: Command.Average, result: Double) extends Result
+    final case class Min(min: Command.Min, result: Double) extends Result
+    final case class Max(max: Command.Max, result: Double) extends Result
   }
 
   def parseCommand(line: String): Either[ErrorMessage, Command] = {
@@ -132,7 +120,13 @@ object _3 {
     case ma @ Max(args) => Right(Result.Max(ma, args.max))
   }
 
-  def renderResult(result: Result): String = result.print
+  def renderResult(result: Result): String = result match {
+    case Result.Divide(command, res) => s"${command.dividend} divided by ${command.divisor} is $res"
+    case Result.Sum(command, res) => s"the sum of ${command.numbers.mkString(" ")} is $res"
+    case Result.Average(command, res) =>  s"the average of ${command.numbers.mkString(" ")} is $res"
+    case Result.Max(command, res) => s"the maximum of ${command.numbers.mkString(" ")} is $res"
+    case Result.Min(command, res) => s"the minimum of ${command.numbers.mkString(" ")} is $res"
+  }
 
   def process(line: String): String = {
     val renderedRes = for {
