@@ -76,7 +76,7 @@ object _3 {
     case object IllegalNumberFormat extends ErrorMessage("Illegal number format")
     case object IllegalNumberOfArguments extends ErrorMessage("Illegal number of arguments")
     case object UnsupportedOperation extends ErrorMessage("Unsupported operation")
-    case object UnknownError extends ErrorMessage("Something wen wrong")
+    case object UnknownError extends ErrorMessage("Something went wrong")
     implicit def fromThrowable(throwable: Throwable): ErrorMessage = throwable match {
       case _: NumberFormatException => IllegalNumberFormat
       case _ => UnknownError
@@ -127,7 +127,7 @@ object _3 {
       .toEitherNarrow[ErrorMessage]
       .map(d => Result.Divide(div, d))
     case s @ Sum(args) => Right(Result.Sum(s, args.sum))
-    case a @ Average(args) => Right(Result.Average(a, args.sum/args.size))
+    case a @ Average(args) => Right(Result.Average(a, args.sum / args.size))
     case mi @ Min(args) => Right(Result.Min(mi, args.min))
     case ma @ Max(args) => Right(Result.Max(ma, args.max))
   }
