@@ -1,12 +1,12 @@
 package com.evolutiongaming.bootcamp.homework._3
 
 import cats.implicits.toTraverseOps
-import com.evolutiongaming.bootcamp.homework._3._3.Command.{Average, Divide, Max, Min, Sum}
+import com.evolutiongaming.bootcamp.homework._3._3.Command.{ Average, Divide, Max, Min, Sum }
 
 import scala.io.Source
 import scala.util.Try
 import cats.syntax.either._
-import com.evolutiongaming.bootcamp.homework._3._3.ErrorMessage.{IllegalNumberOfArguments, UnsupportedOperation}
+import com.evolutiongaming.bootcamp.homework._3._3.ErrorMessage.{ IllegalNumberOfArguments, UnsupportedOperation }
 
 object _3 {
   // Homework
@@ -34,22 +34,21 @@ object _3 {
   // In case of commands that cannot be parsed or calculations that cannot be performed,
   // output a single line starting with "Error: "
 
-  implicit class TryOps[A](ta: Try[A]){
+  implicit class TryOps[A](ta: Try[A]) {
     def toEitherNarrow[B](implicit fromThrowable: Throwable => B): Either[B, A] = ta.toEither.leftMap(fromThrowable)
   }
 
   sealed trait Command
   object Command {
-    final case class Divide private(dividend: Double, divisor: Double) extends Command
+    final case class Divide private (dividend: Double, divisor: Double) extends Command
     object Divide {
-      def apply(dividend: String, divisor: String): Either[ErrorMessage, Divide] = {
+      def apply(dividend: String, divisor: String): Either[ErrorMessage, Divide] =
         (for {
           dividend <- Try(dividend.toDouble)
           divisor <- Try(divisor.toDouble)
         } yield Divide(dividend, divisor)).toEitherNarrow[ErrorMessage]
-      }
     }
-    final case class Sum private(numbers: List[Double]) extends Command
+    final case class Sum private (numbers: List[Double]) extends Command
     object Sum {
       def apply(numbersS: List[String]): Either[ErrorMessage, Sum] =
         numbersS.traverse(s => Try(s.toDouble).toEitherNarrow[ErrorMessage]).map(Sum.apply)
@@ -71,7 +70,7 @@ object _3 {
     }
   }
 
-  sealed abstract class ErrorMessage(details: String) { def message: String = s"Error: $details"}
+  sealed abstract class ErrorMessage(details: String) { def message: String = s"Error: $details" }
   object ErrorMessage {
     case object IllegalNumberFormat extends ErrorMessage("Illegal number format")
     case object IllegalNumberOfArguments extends ErrorMessage("Illegal number of arguments")
@@ -79,11 +78,11 @@ object _3 {
     case object UnknownError extends ErrorMessage("Something went wrong")
     implicit def fromThrowable(throwable: Throwable): ErrorMessage = throwable match {
       case _: NumberFormatException => IllegalNumberFormat
-      case _ => UnknownError
+      case _                        => UnknownError
     }
   }
 
-  sealed trait Result{
+  sealed trait Result {
     def result: Double
   }
   object Result {
@@ -94,38 +93,38 @@ object _3 {
     final case class Max(max: Command.Max, result: Double) extends Result
   }
 
-  def parseCommand(line: String): Either[ErrorMessage, Command] = {
+  def parseCommand(line: String): Either[ErrorMessage, Command] =
     line split "\\s+" toList match {
       case "divide" :: dividend :: divisor :: Nil => Divide(dividend, divisor)
-      case "divide" :: _ => Left(IllegalNumberOfArguments)
-      case "sum" :: args if args.nonEmpty => Sum(args)
-      case "sum" :: _ => Left(IllegalNumberOfArguments)
-      case "average" :: args if args.nonEmpty => Average(args)
-      case "average" :: _ => Left(IllegalNumberOfArguments)
-      case "min" :: args if args.nonEmpty => Min(args)
-      case "min" :: _ => Left(IllegalNumberOfArguments)
-      case "max" :: args if args.nonEmpty => Max(args)
-      case "max" :: _ => Left(IllegalNumberOfArguments)
-      case _ => Left(UnsupportedOperation)
+      case "divide" :: _                          => Left(IllegalNumberOfArguments)
+      case "sum" :: args if args.nonEmpty         => Sum(args)
+      case "sum" :: _                             => Left(IllegalNumberOfArguments)
+      case "average" :: args if args.nonEmpty     => Average(args)
+      case "average" :: _                         => Left(IllegalNumberOfArguments)
+      case "min" :: args if args.nonEmpty         => Min(args)
+      case "min" :: _                             => Left(IllegalNumberOfArguments)
+      case "max" :: args if args.nonEmpty         => Max(args)
+      case "max" :: _                             => Left(IllegalNumberOfArguments)
+      case _                                      => Left(UnsupportedOperation)
     }
-  }
 
   def calculate(command: Command): Either[ErrorMessage, Result] = command match {
-    case div @ Divide(dividend, divisor) => Try(dividend / divisor)
-      .toEitherNarrow[ErrorMessage]
-      .map(d => Result.Divide(div, d))
-    case s @ Sum(args) => Right(Result.Sum(s, args.sum))
+    case div @ Divide(dividend, divisor) =>
+      Try(dividend / divisor)
+        .toEitherNarrow[ErrorMessage]
+        .map(d => Result.Divide(div, d))
+    case s @ Sum(args)     => Right(Result.Sum(s, args.sum))
     case a @ Average(args) => Right(Result.Average(a, args.sum / args.size))
-    case mi @ Min(args) => Right(Result.Min(mi, args.min))
-    case ma @ Max(args) => Right(Result.Max(ma, args.max))
+    case mi @ Min(args)    => Right(Result.Min(mi, args.min))
+    case ma @ Max(args)    => Right(Result.Max(ma, args.max))
   }
 
   def renderResult(result: Result): String = result match {
-    case Result.Divide(command, res) => s"${command.dividend} divided by ${command.divisor} is $res"
-    case Result.Sum(command, res) => s"the sum of ${command.numbers.mkString(" ")} is $res"
-    case Result.Average(command, res) =>  s"the average of ${command.numbers.mkString(" ")} is $res"
-    case Result.Max(command, res) => s"the maximum of ${command.numbers.mkString(" ")} is $res"
-    case Result.Min(command, res) => s"the minimum of ${command.numbers.mkString(" ")} is $res"
+    case Result.Divide(command, res)  => s"${command.dividend} divided by ${command.divisor} is $res"
+    case Result.Sum(command, res)     => s"the sum of ${command.numbers.mkString(" ")} is $res"
+    case Result.Average(command, res) => s"the average of ${command.numbers.mkString(" ")} is $res"
+    case Result.Max(command, res)     => s"the maximum of ${command.numbers.mkString(" ")} is $res"
+    case Result.Min(command, res)     => s"the minimum of ${command.numbers.mkString(" ")} is $res"
   }
 
   def process(line: String): String = {
@@ -138,5 +137,7 @@ object _3 {
   }
 
   def main(args: Array[String]): Unit =
-    Source.stdin.getLines() map { line => process(line) } foreach println
+    Source.stdin.getLines() map { line =>
+      process(line)
+    } foreach println
 }

@@ -8,7 +8,6 @@
 .metals
 .vscode
 .bsp
-.scalafmt.conf
 metals.sbt
 
 target/
