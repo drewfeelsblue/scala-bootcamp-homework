@@ -6,6 +6,7 @@ import com.evolutiongaming.bootcamp.homework._3._3.Command.{ Average, Divide, Ma
 import scala.io.Source
 import scala.util.Try
 import cats.syntax.either._
+import scala.language.postfixOps
 import com.evolutiongaming.bootcamp.homework._3._3.ErrorMessage.{ IllegalNumberOfArguments, UnsupportedOperation }
 
 object _3 {
