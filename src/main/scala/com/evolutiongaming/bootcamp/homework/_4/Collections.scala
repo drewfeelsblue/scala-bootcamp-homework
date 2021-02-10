@@ -314,7 +314,7 @@ object Variance {
 object Leetcode {
   // hometask:
   // https://leetcode.com/problems/running-sum-of-1d-array/
-  def runningSum(nums: List[Int]): List[Int] = nums.inits.map(_.sum).toList.init.reverse
+  def runningSum(nums: List[Int]): List[Int] = nums.tail.scanLeft(nums.head)(_ + _)
   // https://leetcode.com/problems/shuffle-the-array
   def shuffle(nums: List[Int], n: Int): List[Int] = {
     val (first, second) = nums.splitAt(n)

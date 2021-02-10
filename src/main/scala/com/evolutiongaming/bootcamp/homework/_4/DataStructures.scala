@@ -16,7 +16,7 @@ object DataStructures {
   val mutableList = scala.collection.mutable.ListBuffer(1, 2, 3)
   mutableList.update(1, -1)
 
-  val immutableList1 = scala.collection.immutable.List(1, 2, 3)
+  val immutableList1       = scala.collection.immutable.List(1, 2, 3)
   val updatedImmutableList = immutableList1.updated(1, -1)
 
   val doTheyHaveEqualContents1 = mutableList == updatedImmutableList // true
@@ -43,13 +43,13 @@ object DataStructures {
   val emptyList2 = List()
   val emptyList3 = List.empty
 
-  val prepend4 = 4 :: immutableList2 // 4 :: 1 :: 2 :: 3 :: Nil
-  val prepend42 = 5 :: immutableList2 // 5 :: 1 :: 2 :: 3 :: Nil
+  val prepend4   = 4 :: immutableList2 // 4 :: 1 :: 2 :: 3 :: Nil
+  val prepend42  = 5 :: immutableList2 // 5 :: 1 :: 2 :: 3 :: Nil
   val tailOfList = immutableList2.tail // 2 :: 3 :: Nil
 
   val joinLists = immutableList2 ::: List(8, 9) // 1 :: 2 :: 3 :: 8 :: 9 :: Nil
 
-  val headOfList1 = Try(emptyList1.head)// what will happen here?!
+  val headOfList1 = Try(emptyList1.head) // what will happen here?!
   val headOfList2 = emptyList1.headOption // None
   val headOfList3 = immutableList2.headOption // Some(1)
 
@@ -81,8 +81,8 @@ object DataStructures {
   // Exercise. Write a function that checks if all values in a `List` are equal.
   // Think about what you think your function should return if `list` is empty, and why.
   def allEqual[T](list: List[T]): Boolean = list match {
-    case Nil => true
-    case t :: Nil => true
+    case Nil       => true
+    case t :: Nil  => true
     case t :: tail => tail.forall(_ == t)
   }
 
@@ -94,16 +94,16 @@ object DataStructures {
   val vegetableWeights = Map(
     ("pumpkins", 10),
     ("cucumbers", 20),
-    ("olives", 2),
+    ("olives", 2)
   )
 
   val vegetablePrices = Map(
     "tomatoes" -> 4,
     "peppers" -> 5,
-    "olives" -> 17,
+    "olives" -> 17
   )
 
-  val moreVegetablePrices = vegetablePrices + ("pumpkins" -> 3)
+  val moreVegetablePrices  = vegetablePrices + ("pumpkins" -> 3)
   val lessVegetableWeights = vegetableWeights - "pumpkins"
 
   val questionableMap = vegetableWeights ++ vegetablePrices
@@ -114,10 +114,10 @@ object DataStructures {
     "tomatoes" -> 17,
     "peppers" -> 234,
     "olives" -> 32,
-    "cucumbers" -> 323,
+    "cucumbers" -> 323
   )
 
-  val tomatoAmount: Int = vegetableAmounts("tomatoes")
+  val tomatoAmount: Int            = vegetableAmounts("tomatoes")
   val tomatoAmountOpt: Option[Int] = vegetableAmounts.get("tomatoes")
   val carrotAmountWithDefault: Int = vegetableAmounts.getOrElse("carrots", 0)
 
@@ -125,8 +125,9 @@ object DataStructures {
   // `vegetableAmounts` and prices per unit from `vegetablePrices`. Assume the price is 10 if not available
   // in `vegetablePrices`.
   val totalVegetableCost: Int = {
-    vegetableAmounts.foldLeft(0) { case (acc, (vegetable, amount)) =>
-      acc + vegetablePrices.getOrElse(vegetable, 10) * amount
+    vegetableAmounts.foldLeft(0) {
+      case (acc, (vegetable, amount)) =>
+        acc + vegetablePrices.getOrElse(vegetable, 10) * amount
     }
   }
 
@@ -135,15 +136,16 @@ object DataStructures {
   //
   // For example, the total weight of "olives" is 2 * 32 == 64.
   val totalVegetableWeights: Map[String, Int] = { // implement here
-    vegetableWeights.flatMap { case (vegetable, weight) =>
-      vegetableAmounts.get(vegetable).map(a => (vegetable, a * weight))
+    vegetableWeights.flatMap {
+      case (vegetable, weight) =>
+        vegetableAmounts.get(vegetable).map(a => (vegetable, a * weight))
     }
   }
 
   // Ranges and Sequences
-  val inclusiveRange: Seq[Int] = 2 to 4    // 2, 3, 4, or <=
+  val inclusiveRange: Seq[Int] = 2 to 4 // 2, 3, 4, or <=
   val exclusiveRange: Seq[Int] = 2 until 4 // 2, 3, or <
-  val withStep: Seq[Int] = 2 to 40 by 7    // 2, 9, 16, 23, 30, 37
+  val withStep: Seq[Int]       = 2 to 40 by 7 // 2, 9, 16, 23, 30, 37
 
   // Seq, IndexedSeq and LinearSeq traits are implemented by many collections and contain various useful
   // methods. See https://docs.scala-lang.org/overviews/collections/seqs.html in case you are interested
@@ -197,8 +199,9 @@ object DataStructures {
   //   - Handle the trivial case where `n == 1`.
   //   - For other `n`, for each `set` element `elem`, generate all subsets of size `n - 1` from the set
   //     that don't include `elem`, and add `elem` to them.
-  def allSubsetsOfSizeN[A](set: Set[A], n: Int): Set[Set[A]] = {
-    Set(set)
+  def allSubsetsOfSizeN[A](set: Set[A], n: Int): Set[Set[A]] = n match {
+    case 1 => set.map(Set(_))
+    case n => set.flatMap(el => allSubsetsOfSizeN(set - el, n - 1).map(s => s + el))
   }
 
   // Homework
@@ -220,7 +223,7 @@ object DataStructures {
   // output `List(Set("e") -> 0, Set("a", "d") -> 1, Set("b", "f", "g") -> 2, Set("c") -> 4)`.
   def sortConsideringEqualValues[T](map: Map[T, Int]): List[(Set[T], Int)] =
     map
-      .groupMapReduce { case (_, i) => i } { case (t, _) => Set(t) } { _ ++ _ }
+      .groupMapReduce { case (_, i) => i } { case (t, _) => Set(t) }(_ ++ _)
       .toList
       .sortBy { case (n, _) => n }
       .map { case (n, s) => (s, n) }
