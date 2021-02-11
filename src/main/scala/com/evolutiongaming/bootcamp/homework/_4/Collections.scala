@@ -194,9 +194,9 @@ object LinkedList extends App {
     @tailrec
     def scanLeftRec(list: List[T])(f: (T, T) => T)(actual: List[T]): List[T] = list match {
       case Nil     => actual
-      case x :: xs => scanLeftRec(xs)(f)(actual :+ f(actual.last, x))
+      case x :: xs => scanLeftRec(xs)(f)(f(actual.head, x) :: actual)
     }
-    scanLeftRec(list)(f)(List(zero))
+    scanLeftRec(list)(f)(List(zero)).reverse
   }
 
   // https://twitter.com/allenholub/status/1357115515672555520/photo/1
@@ -206,9 +206,10 @@ object LinkedList extends App {
     case c :: Nil => List((c, 1))
     case h :: t =>
       t.foldLeft(List((h, 1))) { (accL, cur) =>
-        val (lastChar, lastInt) = accL.last
-        if (lastChar == cur) accL.init :+ (cur, lastInt + 1) else accL :+ (cur, 1)
-      }
+          val (lastChar, lastInt) = accL.head
+          if (lastChar == cur) (cur, lastInt + 1) :: accL.tail else (cur, 1) :: accL
+        }
+        .reverse
   }
 
   /*
