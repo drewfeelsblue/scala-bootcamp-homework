@@ -27,7 +27,7 @@ object _7 {
 
   object Task1 {
     final case class Money(amount: BigDecimal)
-    implicit val moneyOrdering: Ordering[Money] = Ordering[BigDecimal].on(m => m.amount)
+    implicit val moneyOrdering: Ordering[Money] = Ordering[BigDecimal].on(_.amount)
   }
 
   object Task2 {
@@ -103,7 +103,7 @@ object _7 {
       }
     }
 
-    implicit val stringEq: Eq[String] = (s1: String, s2: String) => s1 == s2
+    implicit val stringEq: Eq[String] = _ == _
 
     import EqSyntax._
     "qwe" === "qwe"
