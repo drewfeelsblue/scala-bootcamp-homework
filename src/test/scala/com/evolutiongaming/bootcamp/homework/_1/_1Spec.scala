@@ -2,7 +2,7 @@ package com.evolutiongaming.bootcamp.homework._1
 
 import _1._
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers.{thrownBy, _}
+import org.scalatest.matchers.should.Matchers._
 
 class _1Spec extends AnyFlatSpec {
 
@@ -24,6 +24,6 @@ class _1Spec extends AnyFlatSpec {
   }
 
   "gcd" should "raise an exception" in {
-    the [IllegalArgumentException] thrownBy gcd(0, 0) should have message "At least one argument should be non-zero"
+    the[IllegalArgumentException] thrownBy gcd(0, 0) should have message "At least one argument should be non-zero"
   }
 }
