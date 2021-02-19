@@ -1,0 +1,1 @@
+addSbtPlugin("com.akarasev" % "sbt-bulky-sources" % "0.1")
