@@ -1,5 +1,4 @@
 sbtPlugin := true
-isSnapshot := true
 
 organization := "com.akarasev"
 
